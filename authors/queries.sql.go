@@ -20,8 +20,8 @@ RETURNING id, name, bio
 `
 
 type CreateAuthorParams struct {
-	Name string
-	Bio  sql.NullString
+	Name string         `json:"name"`
+	Bio  sql.NullString `json:"bio"`
 }
 
 func (q *Queries) CreateAuthor(ctx context.Context, arg CreateAuthorParams) (Author, error) {
@@ -90,9 +90,9 @@ RETURNING id, name, bio
 `
 
 type UpdateAuthorParams struct {
-	Name string
-	Bio  sql.NullString
-	ID   int64
+	Name string         `json:"name"`
+	Bio  sql.NullString `json:"bio"`
+	ID   int64          `json:"id"`
 }
 
 func (q *Queries) UpdateAuthor(ctx context.Context, arg UpdateAuthorParams) (Author, error) {

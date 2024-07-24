@@ -4,91 +4,64 @@ import (
 	"context"
 	"database/sql"
 	_ "embed"
+	"log"
+	"os"
+
 	"github.com/StevenMolina22/fiber-turso/authors"
 	"github.com/gofiber/fiber/v2"
+	"github.com/joho/godotenv"
 	_ "github.com/mattn/go-sqlite3"
-	"log"
+	_ "github.com/tursodatabase/libsql-client-go/libsql"
 )
+
+type AuthorHandler struct {
+	queries *authors.Queries
+}
+
+func NewAuthorHandler(db *sql.DB) *AuthorHandler {
+	return &AuthorHandler{
+		queries: authors.New(db),
+	}
+}
 
 //go:embed schemas.sql
 var schemaSQL string
 
-var db *sql.DB
-
 func main() {
-	var err error	
-	db, err := sql.Open("sqlite3", "sqlite.db")
+	// Load env variables
+	if err := godotenv.Load(); err != nil {
+		log.Fatal("Error loading .env file", err)
+	}
+	dbUrl := os.Getenv("DB_URL")
+
+	// Open database
+	db, err := sql.Open("libsql", dbUrl)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("Error opening database: ", err)
 	}
 	defer db.Close()
 
-	if err := setupDatabase(); err != nil {
-		log.Fatal(err)
+	// Create tables
+	ctx := context.Background()
+	if _, err := db.ExecContext(ctx, schemaSQL); err != nil {
+		log.Fatal("Error creating tables: ", err)
 	}
 
-	app := setupFiber()
-	log.Fatal(app.Listen(":4000"))
+	app := setupFiber(db)
+	log.Fatal(app.Listen(":3000"))
 }
 
-func setupFiber() *fiber.App {
+func setupFiber(db *sql.DB) *fiber.App {
 	app := fiber.New()
 
 	app.Get("/", func(ctx *fiber.Ctx) error {
 		return ctx.SendString("Server active")
 	})
 
-	// Add more routes here
-	app.Get("/authors", getAuthors)
-	app.Post("/authors", createAuthor)
+	authorHdlr := NewAuthorHandler(db)
+
+	app.Get("/authors", authorHdlr.getAuthors)
+	app.Post("/authors", authorHdlr.createAuthor)
 
 	return app
-}
-
-func setupDatabase() error {
-	ctx := context.Background()
-
-	// Create tables
-	if _, err := db.ExecContext(ctx, schemaSQL); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func getAuthors(c *fiber.Ctx) error {
-	queries := authors.New(db)
-	ctx := c.Context()
-
-	authors, err := queries.ListAuthors(ctx)
-	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error": err.Error(),
-		})
-	}
-
-	return c.JSON(authors)
-}
-
-func createAuthor(c *fiber.Ctx) error {
-	queries := authors.New(db)
-	ctx := c.Context()
-
-	// Parse request body
-	var input authors.CreateAuthorParams
-	if err := c.BodyParser(&input); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error": err.Error(),
-		})
-	}
-
-	// Create author
-	author, err := queries.CreateAuthor(ctx, input)
-	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error": err.Error(),
-		})
-	}
-
-	return c.Status(fiber.StatusCreated).JSON(author)
 }
