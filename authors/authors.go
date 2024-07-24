@@ -1,11 +1,22 @@
-package main
+package authors
 
 import (
-	"github.com/StevenMolina22/fiber-turso/authors"
+	"database/sql"
+
 	"github.com/gofiber/fiber/v2"
 )
 
-func (hdlr *AuthorHandler) getAuthors(c *fiber.Ctx) error {
+type AuthorHandler struct {
+	queries *Queries
+}
+
+func NewHandler(db *sql.DB) *AuthorHandler {
+	return &AuthorHandler{
+		queries: New(db),
+	}
+}
+
+func (hdlr *AuthorHandler) GetAuthors(c *fiber.Ctx) error {
 	ctx := c.Context()
 
 	authors, err := hdlr.queries.ListAuthors(ctx)
@@ -18,11 +29,11 @@ func (hdlr *AuthorHandler) getAuthors(c *fiber.Ctx) error {
 	return c.JSON(authors)
 }
 
-func (hdlr *AuthorHandler) createAuthor(c *fiber.Ctx) error {
+func (hdlr *AuthorHandler) CreateAuthor(c *fiber.Ctx) error {
 	ctx := c.Context()
 
 	// Parse request body
-	var rawAuthor authors.CreateAuthorParams
+	var rawAuthor CreateAuthorParams
 	if err := c.BodyParser(&rawAuthor); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error": err.Error(),
