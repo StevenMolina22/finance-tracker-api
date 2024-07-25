@@ -1,25 +1,28 @@
-package authors
+package controller
 
 import (
 	"database/sql"
 
+	"github.com/StevenMolina22/fiber-turso/database/sqlc"
 	"github.com/gofiber/fiber/v2"
 )
 
-type AuthorHandler struct {
-	queries *Queries
+// Implemented the controller so that the funcs use the same db queries instance
+type Controller struct {
+	queries *sqlc.Queries
 }
 
-func NewHandler(db *sql.DB) *AuthorHandler {
-	return &AuthorHandler{
-		queries: New(db),
+// Constructor like func
+func NewController(db *sql.DB) *Controller {
+	return &Controller{
+		queries: sqlc.New(db),
 	}
 }
 
-func (hdlr *AuthorHandler) GetAuthors(c *fiber.Ctx) error {
+func (ctlr *Controller) GetAuthors(c *fiber.Ctx) error {
 	ctx := c.Context()
 
-	authors, err := hdlr.queries.ListAuthors(ctx)
+	authors, err := ctlr.queries.ListAuthors(ctx)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"error": err.Error(),
@@ -29,11 +32,11 @@ func (hdlr *AuthorHandler) GetAuthors(c *fiber.Ctx) error {
 	return c.JSON(authors)
 }
 
-func (hdlr *AuthorHandler) CreateAuthor(c *fiber.Ctx) error {
+func (ctlr *Controller) CreateAuthor(c *fiber.Ctx) error {
 	ctx := c.Context()
 
 	// Parse request body
-	var rawAuthor CreateAuthorParams
+	var rawAuthor sqlc.CreateAuthorParams
 	if err := c.BodyParser(&rawAuthor); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error": err.Error(),
@@ -41,7 +44,7 @@ func (hdlr *AuthorHandler) CreateAuthor(c *fiber.Ctx) error {
 	}
 
 	// Create author
-	author, err := hdlr.queries.CreateAuthor(ctx, rawAuthor)
+	author, err := ctlr.queries.CreateAuthor(ctx, rawAuthor)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"error": err.Error(),

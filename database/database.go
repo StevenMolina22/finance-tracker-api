@@ -7,10 +7,10 @@ import (
 	"log"
 )
 
-//go:embed schemas.sql
+//go:embed schemas/schemas.sql
 var schemaSQL string
 
-func InitDB(url string) *sql.DB{
+func Init(url string) *sql.DB {
 	// Open database
 	db, err := sql.Open("libsql", url)
 	if err != nil {
