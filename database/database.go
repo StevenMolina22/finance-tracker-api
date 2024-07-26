@@ -5,6 +5,8 @@ import (
 	"database/sql"
 	_ "embed"
 	"log"
+
+	_ "github.com/tursodatabase/libsql-client-go/libsql"
 )
 
 //go:embed schemas/schemas.sql

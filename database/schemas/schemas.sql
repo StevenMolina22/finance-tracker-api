@@ -1,5 +1,26 @@
-CREATE TABLE IF NOT EXISTS authors (
-  id   INTEGER PRIMARY KEY,
-  name text    NOT NULL,
-  bio  text
-);
+CREATE TABLE
+  IF NOT EXISTS authors (
+    id INTEGER PRIMARY KEY,
+    name text NOT NULL,
+    bio text
+  );
+
+CREATE TABLE
+  IF NOT EXISTS users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    clerk_id TEXT NOT NULL UNIQUE,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+  );
+
+CREATE TABLE
+  IF NOT EXISTS transactions (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER,
+    amount DECIMAL(10, 2),
+    date DATE,
+    description TEXT,
+    type TEXT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+  );
