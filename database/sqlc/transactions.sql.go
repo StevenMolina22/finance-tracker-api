@@ -8,39 +8,54 @@ package sqlc
 import (
 	"context"
 	"database/sql"
+	"time"
 )
 
 const createTransaction = `-- name: CreateTransaction :one
 INSERT INTO
-    transactions (user_id, amount, date, description, type)
+    transactions (
+        user_id,
+        category_id,
+        name,
+        amount,
+        description,
+        type,
+        date
+    )
 VALUES
-    (?, ?, ?, ?, ?) RETURNING id, user_id, amount, date, description, type, created_at, updated_at
+    (?, ?, ?, ?, ?, ?, ?) RETURNING id, user_id, category_id, name, amount, description, type, date, created_at, updated_at
 `
 
 type CreateTransactionParams struct {
-	UserID      sql.NullInt64   `json:"user_id"`
-	Amount      sql.NullFloat64 `json:"amount"`
-	Date        sql.NullTime    `json:"date"`
-	Description sql.NullString  `json:"description"`
-	Type        sql.NullString  `json:"type"`
+	UserID      int64          `json:"user_id"`
+	CategoryID  int64          `json:"category_id"`
+	Name        string         `json:"name"`
+	Amount      float64        `json:"amount"`
+	Description sql.NullString `json:"description"`
+	Type        string         `json:"type"`
+	Date        time.Time      `json:"date"`
 }
 
 func (q *Queries) CreateTransaction(ctx context.Context, arg CreateTransactionParams) (Transaction, error) {
 	row := q.db.QueryRowContext(ctx, createTransaction,
 		arg.UserID,
+		arg.CategoryID,
+		arg.Name,
 		arg.Amount,
-		arg.Date,
 		arg.Description,
 		arg.Type,
+		arg.Date,
 	)
 	var i Transaction
 	err := row.Scan(
 		&i.ID,
 		&i.UserID,
+		&i.CategoryID,
+		&i.Name,
 		&i.Amount,
-		&i.Date,
 		&i.Description,
 		&i.Type,
+		&i.Date,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 	)
@@ -50,7 +65,7 @@ func (q *Queries) CreateTransaction(ctx context.Context, arg CreateTransactionPa
 const deleteTransaction = `-- name: DeleteTransaction :one
 DELETE FROM transactions
 WHERE
-    id = ? RETURNING id, user_id, amount, date, description, type, created_at, updated_at
+    id = ? RETURNING id, user_id, category_id, name, amount, description, type, date, created_at, updated_at
 `
 
 func (q *Queries) DeleteTransaction(ctx context.Context, id int64) (Transaction, error) {
@@ -59,10 +74,12 @@ func (q *Queries) DeleteTransaction(ctx context.Context, id int64) (Transaction,
 	err := row.Scan(
 		&i.ID,
 		&i.UserID,
+		&i.CategoryID,
+		&i.Name,
 		&i.Amount,
-		&i.Date,
 		&i.Description,
 		&i.Type,
+		&i.Date,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 	)
@@ -71,7 +88,7 @@ func (q *Queries) DeleteTransaction(ctx context.Context, id int64) (Transaction,
 
 const getTransaction = `-- name: GetTransaction :one
 SELECT
-    id, user_id, amount, date, description, type, created_at, updated_at
+    id, user_id, category_id, name, amount, description, type, date, created_at, updated_at
 FROM
     transactions
 WHERE
@@ -86,10 +103,12 @@ func (q *Queries) GetTransaction(ctx context.Context, id int64) (Transaction, er
 	err := row.Scan(
 		&i.ID,
 		&i.UserID,
+		&i.CategoryID,
+		&i.Name,
 		&i.Amount,
-		&i.Date,
 		&i.Description,
 		&i.Type,
+		&i.Date,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 	)
@@ -98,7 +117,7 @@ func (q *Queries) GetTransaction(ctx context.Context, id int64) (Transaction, er
 
 const listTransactions = `-- name: ListTransactions :many
 SELECT
-    id, user_id, amount, date, description, type, created_at, updated_at
+    id, user_id, category_id, name, amount, description, type, date, created_at, updated_at
 FROM
     transactions
 ORDER BY
@@ -117,10 +136,12 @@ func (q *Queries) ListTransactions(ctx context.Context) ([]Transaction, error) {
 		if err := rows.Scan(
 			&i.ID,
 			&i.UserID,
+			&i.CategoryID,
+			&i.Name,
 			&i.Amount,
-			&i.Date,
 			&i.Description,
 			&i.Type,
+			&i.Date,
 			&i.CreatedAt,
 			&i.UpdatedAt,
 		); err != nil {
@@ -141,40 +162,48 @@ const updateTransaction = `-- name: UpdateTransaction :one
 UPDATE transactions
 SET
     user_id = ?,
+    category_id = ?,
+    name = ?,
     amount = ?,
-    date = ?,
     description = ?,
-    type = ?
+    type = ?,
+    date = ?
 WHERE
-    id = ? RETURNING id, user_id, amount, date, description, type, created_at, updated_at
+    id = ? RETURNING id, user_id, category_id, name, amount, description, type, date, created_at, updated_at
 `
 
 type UpdateTransactionParams struct {
-	UserID      sql.NullInt64   `json:"user_id"`
-	Amount      sql.NullFloat64 `json:"amount"`
-	Date        sql.NullTime    `json:"date"`
-	Description sql.NullString  `json:"description"`
-	Type        sql.NullString  `json:"type"`
-	ID          int64           `json:"id"`
+	UserID      int64          `json:"user_id"`
+	CategoryID  int64          `json:"category_id"`
+	Name        string         `json:"name"`
+	Amount      float64        `json:"amount"`
+	Description sql.NullString `json:"description"`
+	Type        string         `json:"type"`
+	Date        time.Time      `json:"date"`
+	ID          int64          `json:"id"`
 }
 
 func (q *Queries) UpdateTransaction(ctx context.Context, arg UpdateTransactionParams) (Transaction, error) {
 	row := q.db.QueryRowContext(ctx, updateTransaction,
 		arg.UserID,
+		arg.CategoryID,
+		arg.Name,
 		arg.Amount,
-		arg.Date,
 		arg.Description,
 		arg.Type,
+		arg.Date,
 		arg.ID,
 	)
 	var i Transaction
 	err := row.Scan(
 		&i.ID,
 		&i.UserID,
+		&i.CategoryID,
+		&i.Name,
 		&i.Amount,
-		&i.Date,
 		&i.Description,
 		&i.Type,
+		&i.Date,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 	)

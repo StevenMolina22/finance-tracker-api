@@ -6,28 +6,54 @@ package sqlc
 
 import (
 	"database/sql"
+	"time"
 )
 
-type Author struct {
-	ID   int64          `json:"id"`
-	Name string         `json:"name"`
-	Bio  sql.NullString `json:"bio"`
+type Asset struct {
+	ID     int64   `json:"id"`
+	UserID int64   `json:"user_id"`
+	Name   string  `json:"name"`
+	Amount float64 `json:"amount"`
+}
+
+type Budget struct {
+	ID         int64     `json:"id"`
+	CategoryID int64     `json:"category_id"`
+	Amount     float64   `json:"amount"`
+	StartDate  time.Time `json:"start_date"`
+	EndDate    time.Time `json:"end_date"`
+}
+
+type Category struct {
+	ID          int64          `json:"id"`
+	Name        string         `json:"name"`
+	Description sql.NullString `json:"description"`
+}
+
+type Liability struct {
+	ID     int64   `json:"id"`
+	UserID int64   `json:"user_id"`
+	Name   string  `json:"name"`
+	Amount float64 `json:"amount"`
 }
 
 type Transaction struct {
-	ID          int64           `json:"id"`
-	UserID      sql.NullInt64   `json:"user_id"`
-	Amount      sql.NullFloat64 `json:"amount"`
-	Date        sql.NullTime    `json:"date"`
-	Description sql.NullString  `json:"description"`
-	Type        sql.NullString  `json:"type"`
-	CreatedAt   sql.NullTime    `json:"created_at"`
-	UpdatedAt   sql.NullTime    `json:"updated_at"`
+	ID          int64          `json:"id"`
+	UserID      int64          `json:"user_id"`
+	CategoryID  int64          `json:"category_id"`
+	Name        string         `json:"name"`
+	Amount      float64        `json:"amount"`
+	Description sql.NullString `json:"description"`
+	Type        string         `json:"type"`
+	Date        time.Time      `json:"date"`
+	CreatedAt   time.Time      `json:"created_at"`
+	UpdatedAt   time.Time      `json:"updated_at"`
 }
 
 type User struct {
-	ID        int64        `json:"id"`
-	ClerkID   string       `json:"clerk_id"`
-	CreatedAt sql.NullTime `json:"created_at"`
-	UpdatedAt sql.NullTime `json:"updated_at"`
+	ID        int64     `json:"id"`
+	ClerkID   string    `json:"clerk_id"`
+	IsActive  bool      `json:"is_active"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 }

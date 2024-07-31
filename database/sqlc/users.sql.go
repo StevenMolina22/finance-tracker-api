@@ -11,17 +11,23 @@ import (
 
 const createUser = `-- name: CreateUser :one
 INSERT INTO
-    users (clerk_id)
+    users (clerk_id, is_active)
 VALUES
-    (?) RETURNING id, clerk_id, created_at, updated_at
+    (?, ?) RETURNING id, clerk_id, is_active, created_at, updated_at
 `
 
-func (q *Queries) CreateUser(ctx context.Context, clerkID string) (User, error) {
-	row := q.db.QueryRowContext(ctx, createUser, clerkID)
+type CreateUserParams struct {
+	ClerkID  string `json:"clerk_id"`
+	IsActive bool   `json:"is_active"`
+}
+
+func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, error) {
+	row := q.db.QueryRowContext(ctx, createUser, arg.ClerkID, arg.IsActive)
 	var i User
 	err := row.Scan(
 		&i.ID,
 		&i.ClerkID,
+		&i.IsActive,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 	)
@@ -31,7 +37,7 @@ func (q *Queries) CreateUser(ctx context.Context, clerkID string) (User, error) 
 const deleteUser = `-- name: DeleteUser :one
 DELETE FROM users
 WHERE
-    id = ? RETURNING id, clerk_id, created_at, updated_at
+    id = ? RETURNING id, clerk_id, is_active, created_at, updated_at
 `
 
 func (q *Queries) DeleteUser(ctx context.Context, id int64) (User, error) {
@@ -40,6 +46,7 @@ func (q *Queries) DeleteUser(ctx context.Context, id int64) (User, error) {
 	err := row.Scan(
 		&i.ID,
 		&i.ClerkID,
+		&i.IsActive,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 	)
@@ -48,7 +55,7 @@ func (q *Queries) DeleteUser(ctx context.Context, id int64) (User, error) {
 
 const getUser = `-- name: GetUser :one
 SELECT
-    id, clerk_id, created_at, updated_at
+    id, clerk_id, is_active, created_at, updated_at
 FROM
     users
 WHERE
@@ -63,6 +70,7 @@ func (q *Queries) GetUser(ctx context.Context, id int64) (User, error) {
 	err := row.Scan(
 		&i.ID,
 		&i.ClerkID,
+		&i.IsActive,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 	)
@@ -71,7 +79,7 @@ func (q *Queries) GetUser(ctx context.Context, id int64) (User, error) {
 
 const listUsers = `-- name: ListUsers :many
 SELECT
-    id, clerk_id, created_at, updated_at
+    id, clerk_id, is_active, created_at, updated_at
 FROM
     users
 ORDER BY
@@ -90,6 +98,7 @@ func (q *Queries) ListUsers(ctx context.Context) ([]User, error) {
 		if err := rows.Scan(
 			&i.ID,
 			&i.ClerkID,
+			&i.IsActive,
 			&i.CreatedAt,
 			&i.UpdatedAt,
 		); err != nil {
@@ -109,22 +118,25 @@ func (q *Queries) ListUsers(ctx context.Context) ([]User, error) {
 const updateUser = `-- name: UpdateUser :one
 UPDATE users
 SET
-    clerk_id = ?
+    clerk_id = ?,
+    is_active = ?
 WHERE
-    id = ? RETURNING id, clerk_id, created_at, updated_at
+    id = ? RETURNING id, clerk_id, is_active, created_at, updated_at
 `
 
 type UpdateUserParams struct {
-	ClerkID string `json:"clerk_id"`
-	ID      int64  `json:"id"`
+	ClerkID  string `json:"clerk_id"`
+	IsActive bool   `json:"is_active"`
+	ID       int64  `json:"id"`
 }
 
 func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) (User, error) {
-	row := q.db.QueryRowContext(ctx, updateUser, arg.ClerkID, arg.ID)
+	row := q.db.QueryRowContext(ctx, updateUser, arg.ClerkID, arg.IsActive, arg.ID)
 	var i User
 	err := row.Scan(
 		&i.ID,
 		&i.ClerkID,
+		&i.IsActive,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 	)

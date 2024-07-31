@@ -18,14 +18,15 @@ ORDER BY
 
 -- name: CreateUser :one
 INSERT INTO
-    users (clerk_id)
+    users (clerk_id, is_active)
 VALUES
-    (?) RETURNING *;
+    (?, ?) RETURNING *;
 
 -- name: UpdateUser :one
 UPDATE users
 SET
-    clerk_id = ?
+    clerk_id = ?,
+    is_active = ?
 WHERE
     id = ? RETURNING *;
 
