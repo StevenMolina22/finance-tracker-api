@@ -14,7 +14,7 @@ SELECT
 FROM
     transactions
 ORDER BY
-    date;
+    date DESC;
 
 -- name: CreateTransaction :one
 INSERT INTO

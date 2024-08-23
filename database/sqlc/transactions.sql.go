@@ -121,7 +121,7 @@ SELECT
 FROM
     transactions
 ORDER BY
-    date
+    date DESC
 `
 
 func (q *Queries) ListTransactions(ctx context.Context) ([]Transaction, error) {

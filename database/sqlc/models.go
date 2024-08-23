@@ -30,6 +30,16 @@ type Category struct {
 	Description sql.NullString `json:"description"`
 }
 
+type Goal struct {
+	ID        int64     `json:"id"`
+	UserID    int64     `json:"user_id"`
+	Type      string    `json:"type"`
+	Amount    float64   `json:"amount"`
+	StartDate time.Time `json:"start_date"`
+	EndDate   time.Time `json:"end_date"`
+	Status    string    `json:"status"`
+}
+
 type Liability struct {
 	ID     int64   `json:"id"`
 	UserID int64   `json:"user_id"`
