@@ -27,61 +27,60 @@ This API powers a finance tracker application that allows users to record their 
 
 ### **User Management:**
 
-- `GET /users`: List all users.
-- `GET /users/:id`: Retrieve a specific user.
-- `POST /users`: Create a new user.
-- `PUT /users/:id`: Update a user.
-- `DELETE /users/:id`: Delete a user.
+- `GET    /users` : List all users.
+- `GET    /users/:id` : Retrieve a specific user.
+- `POST   /users` : Create a new user.
+- `PUT    /users/:id` : Update a user.
+- `DELETE /users/:id` : Delete a user.
 
 ### **Transaction Management:**
 
-- `GET /transactions`: List all transactions for a user.
-- `GET /transactions/:id`: Retrieve a specific transaction.
-- `POST /transactions`: Create a new transaction.
-- `PUT /transactions/:id`: Update a transaction.
-- `DELETE /transactions/:id`: Delete a transaction.
+- `GET    /transactions` : List all transactions for a user.
+- `GET    /transactions/:id` : Retrieve a specific transaction.
+- `POST   /transactions` : Create a new transaction.
+- `PUT    /transactions/:id` : Update a transaction.
+- `DELETE /transactions/:id` : Delete a transaction.
 
 ### **Category Management:**
 
-- `GET /categories`: List all categories.
-- `GET /categories/:id`: Retrieve a specific category.
-- `POST /categories`: Create a new category.
-- `PUT /categories/:id`: Update a category.
-- `DELETE /categories/:id`: Delete a category.
+- `GET    /categories` : List all categories.
+- `GET    /categories/:id` : Retrieve a specific category.
+- `POST   /categories` : Create a new category.
+- `PUT    /categories/:id` : Update a category.
+- `DELETE /categories/:id` : Delete a category.
 
 ### **Asset Management:**
 
-- `GET /assets`: List all assets for a user.
-- `GET /assets/:id`: Retrieve a specific asset.
-- `POST /assets`: Create a new asset.
-- `PUT /assets/:id`: Update an asset.
-- `DELETE /assets/:id`: Delete an asset.
+- `GET    /assets` : List all assets for a user.
+- `GET    /assets/:id` : Retrieve a specific asset.
+- `POST   /assets` : Create a new asset.
+- `PUT    /assets/:id` : Update an asset.
+- `DELETE /assets/:id` : Delete an asset.
 
 ### **Liability Management:**
 
-- `GET /liabilities`: List all liabilities for a user.
-- `GET /liabilities/:id`: Retrieve a specific liability.
-- `POST /liabilities`: Create a new liability.
-- `PUT /liabilities/:id`: Update a liability.
-- `DELETE /liabilities/:id`: Delete a liability.
+- `GET    /liabilities` : List all liabilities for a user.
+- `GET    /liabilities/:id` : Retrieve a specific liability.
+- `POST   /liabilities` : Create a new liability.
+- `PUT    /liabilities/:id` : Update a liability.
+- `DELETE /liabilities/:id` : Delete a liability.
 
 ### **Goal Management:**
 
-- `GET /goals`: List all goals for a user. (Optional)
-- `GET /goals/:id`: Retrieve a specific goal.
-- `POST /goals`: Create a new goal.
-- `PUT /goals/:id`: Update a goal.
-- `DELETE /goals/:id`: Delete a goal.
-
-- `POST /goals/:id/progress`: Create goal progress entry.
-- `GET /goals/:id/progress`: Retrieve goal progress data.
+- `GET    /goals` : List all goals for a user. (Optional)
+- `GET    /goals/:id` : Retrieve a specific goal.
+- `POST   /goals` : Create a new goal.
+- `PUT    /goals/:id` : Update a goal.
+- `DELETE /goals/:id` : Delete a goal.
+- `POST   /goals/:id/progress`: Create goal progress entry.
+- `GET    /goals/:id/progress`: Retrieve goal progress data.
 
 ### **Reporting & Analytics:**
 
-- `GET /reports/income_vs_expenses`: Get income vs expense report for a date range.
-- `GET /reports/category_spending`: Get category spending report for a date range.
-- `GET /reports/net_worth`: Get net worth trend report for a date range.
-- `GET /reports/goal_progress`: Get progress report for a specific goal.
+- `GET    /reports/category_spending` : Get category spending report for a date range.
+- `GET    /reports/net_worth` : Get net worth trend report for a date range.
+- `GET    /reports/goal_progress` : Get progress report for a specific goal.
+- `GET    /reports/goal_progress` : Get progress report for a specific goal.
 
 ## ✅ TODO
 
@@ -95,7 +94,6 @@ This API powers a finance tracker application that allows users to record their 
 
 ### Roadmap
 
-1. **Define Goal Model:** Create a data model for goals with necessary fields (id, user_id, type, amount, start_date, end_date, status, notes).
 2. **Define Goal Progress Model:** Create a data model for goal progress with necessary fields (id, goal_id, date, amount_saved/paid/invested).
 3. **Implement Goal CRUD Operations:** Create, read, update, and delete operations for goals.
 4. **Implement Goal Progress Creation:** Allow users to add progress entries for goals.
