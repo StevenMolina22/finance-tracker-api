@@ -1,135 +1,317 @@
-# 🤑 FINANCE TRACKER PROJECT API
+# Finance Tracker API Documentation
 
-This API powers a finance tracker application that allows users to record their income, expenses, and manage their financial well-being.
+## Overview
 
-## 🤖 Functionalities
+The **Finance Tracker API** is a robust, scalable, and modern RESTful API designed to empower users to manage their financial lives effectively. Built with Go, Fiber, and Turso (LibSQL), this project provides a comprehensive backend solution for tracking income, expenses, assets, liabilities, budgets, and financial goals. Whether you're a developer looking to contribute to a cutting-edge project, a recruiter seeking talent with real-world experience, or a client in need of a reliable financial management system, this API offers a professional-grade foundation.
 
-**Implemented**
+This documentation highlights the system's architecture, features, and extensibility, showcasing its value to technical and non-technical stakeholders alike.
 
-- **User Management:** Create, retrieve, update, and delete user accounts.
-- **Transaction Management:** Track income and expenses with categories, amounts, and dates.
-- **Category Management:** Define categories to organize transactions.
-- **Asset & Liability Management:** Track assets and liabilities to calculate net worth.
-- **Goal Setting:** Define saving, debt reduction, or investment goals with progress tracking.
-- **Reporting & Analytics:** Generate reports for income vs expenses, category spending, net worth trends, and goal progress.
+---
 
-## 🎓 Data Models
+## Table of Contents
 
-- **Users:** Stores user information (id, username, email, etc.)
-- **Transactions:** Records income and expenses (id, user_id, type, category_id, amount, date, etc.)
-- **Categories:** Defines categories for transactions (id, name, description, etc.)
-- **Assets:** Tracks user's assets (id, user_id, name, value, etc.)
-- **Liabilities:** Tracks user's liabilities (id, user_id, name, value, etc.)
-- **Goals:** Defines user's financial goals (id, user_id, type, amount, start_date, end_date, status, notes)
-- **Goal Progress:** Tracks progress towards achieving goals (id, goal_id, date, amount_saved/paid/invested)
+1. [Project Highlights](#project-highlights)
+   - [Why This Project Stands Out](#why-this-project-stands-out)
+2. [Features](#features)
+   - [Implemented Functionalities](#implemented-functionalities)
+   - [Future Roadmap](#future-roadmap)
+3. [Technical Architecture](#technical-architecture)
+   - [Technology Stack](#technology-stack)
+   - [Directory Structure](#directory-structure)
+   - [Data Models](#data-models)
+4. [API Endpoints](#api-endpoints)
+   - [User Management](#user-management)
+   - [Transaction Management](#transaction-management)
+   - [Category Management](#category-management)
+   - [Asset Management](#asset-management)
+   - [Liability Management](#liability-management)
+   - [Budget Management](#budget-management)
+   - [Goal Management](#goal-management)
+5. [Setup and Installation](#setup-and-installation)
+   - [Prerequisites](#prerequisites)
+   - [Installation Steps](#installation-steps)
+6. [Usage Examples](#usage-examples)
+   - [Creating a User](#creating-a-user)
+   - [Tracking a Transaction](#tracking-a-transaction)
+7. [Contributing](#contributing)
+   - [How to Get Involved](#how-to-get-involved)
+   - [Code Standards](#code-standards)
+8. [For Clients](#for-clients)
+   - [Business Value](#business-value)
+   - [Customization Options](#customization-options)
+9. [Contact and Collaboration](#contact-and-collaboration)
 
-## 🦾 API Endpoints (Implemented)
+---
 
-### **User Management:**
+## Project Highlights
 
-- `GET    /users` : List all users.
-- `GET    /users/:id` : Retrieve a specific user.
-- `POST   /users` : Create a new user.
-- `PUT    /users/:id` : Update a user.
-- `DELETE /users/:id` : Delete a user.
+### Why This Project Stands Out
 
-### **Transaction Management:**
+- **Modern Tech Stack**: Built with Go and Fiber for high performance, paired with Turso (LibSQL) for lightweight, scalable database management.
+- **Clean Architecture**: Follows RESTful principles with a modular design, making it easy to maintain, extend, and scale.
+- **Real-World Relevance**: Addresses everyday financial management needs, from budgeting to goal tracking, appealing to both end-users and businesses.
+- **Developer-Friendly**: Well-documented codebase with SQLC-generated queries, reducing boilerplate and ensuring type safety.
+- **Recruiter Appeal**: Demonstrates proficiency in backend development, database design, and API engineering—skills in high demand.
 
-- `GET    /transactions` : List all transactions for a user.
-- `GET    /transactions/:id` : Retrieve a specific transaction.
-- `POST   /transactions` : Create a new transaction.
-- `PUT    /transactions/:id` : Update a transaction.
-- `DELETE /transactions/:id` : Delete a transaction.
+---
 
-### **Category Management:**
+## Features
 
-- `GET    /categories` : List all categories.
-- `GET    /categories/:id` : Retrieve a specific category.
-- `POST   /categories` : Create a new category.
-- `PUT    /categories/:id` : Update a category.
-- `DELETE /categories/:id` : Delete a category.
+### Implemented Functionalities
 
-### **Asset Management:**
+- **User Management**: CRUD operations for user accounts with Clerk integration for authentication-ready design.
+- **Transaction Management**: Track income and expenses with categorization and detailed metadata.
+- **Category Management**: Organize transactions with customizable categories.
+- **Asset & Liability Tracking**: Monitor financial health by managing assets and liabilities.
+- **Budget Management**: Set and track budgets tied to categories with time-bound constraints.
+- **Goal Management**: Define and monitor financial goals with user-specific progress tracking.
 
-- `GET    /assets` : List all assets for a user.
-- `GET    /assets/:id` : Retrieve a specific asset.
-- `POST   /assets` : Create a new asset.
-- `PUT    /assets/:id` : Update an asset.
-- `DELETE /assets/:id` : Delete an asset.
+### Future Roadmap
 
-### **Liability Management:**
+- **Reporting & Analytics**: Generate insights like income vs. expenses, category spending, and net worth trends.
+- **Authentication**: Integrate full JWT or OAuth2-based security.
+- **Pagination & Filtering**: Enhance API usability with advanced query options.
+- **Goal Progress Tracking**: Add detailed progress endpoints for richer goal management.
 
-- `GET    /liabilities` : List all liabilities for a user.
-- `GET    /liabilities/:id` : Retrieve a specific liability.
-- `POST   /liabilities` : Create a new liability.
-- `PUT    /liabilities/:id` : Update a liability.
-- `DELETE /liabilities/:id` : Delete a liability.
+---
 
-### **Goal Management:**
+## Technical Architecture
 
-- `GET    /goals` : List all goals for a user. (Optional)
-- `GET    /goals/:id` : Retrieve a specific goal.
-- `POST   /goals` : Create a new goal.
-- `PUT    /goals/:id` : Update a goal.
-- `DELETE /goals/:id` : Delete a goal.
-- `POST   /goals/:id/progress`: Create goal progress entry.
-- `GET    /goals/:id/progress`: Retrieve goal progress data.
+### Technology Stack
 
-### **Reporting & Analytics:**
+| Component          | Technology            | Purpose                              |
+|--------------------|-----------------------|--------------------------------------|
+| Language           | Go 1.22.4            | High-performance backend development |
+| Web Framework      | Fiber v2             | Fast, lightweight HTTP routing       |
+| Database           | Turso (LibSQL)       | Scalable SQLite-based storage        |
+| Query Generation   | SQLC v1.26.0         | Type-safe SQL queries                |
+| Environment Config | godotenv             | Manage environment variables         |
 
-- `GET    /reports/category_spending` : Get category spending report for a date range.
-- `GET    /reports/net_worth` : Get net worth trend report for a date range.
-- `GET    /reports/goal_progress` : Get progress report for a specific goal.
-- `GET    /reports/goal_progress` : Get progress report for a specific goal.
+### Directory Structure
 
-## ✅ TODO
+```
+controller/         # API endpoint handlers
+database/           # Database initialization and schema
+  queries/          # SQL query definitions
+  schemas/          # Database schema (DDL)
+  sqlc/             # Auto-generated Go code from SQLC
+router/             # Route definitions
+.env.example        # Environment variable template
+.gitignore         # Git ignore rules
+go.mod             # Go module dependencies
+main.go            # Application entry point
+readME.md          # Project overview
+sqlc.yaml          # SQLC configuration
+```
 
-- Implement `GET /goals` endpoint to retrieve all goals for a user.
-- Implement `GET /goals/:id` endpoint to retrieve a specific goal.
-- Implement `POST /goals` endpoint to create a new goal.
-- Implement `PUT /goals/:id` endpoint to update a goal.
-- Implement `DELETE /goals/:id` endpoint to delete a goal.
-- Implement `POST /goals/:id/progress` endpoint to create goal progress entry.
-- Implement `GET /goals/:id/progress` endpoint to retrieve goal progress data.
+### Data Models
 
-### Roadmap
+The API leverages a relational database with the following core entities:
 
-2. **Define Goal Progress Model:** Create a data model for goal progress with necessary fields (id, goal_id, date, amount_saved/paid/invested).
-3. **Implement Goal CRUD Operations:** Create, read, update, and delete operations for goals.
-4. **Implement Goal Progress Creation:** Allow users to add progress entries for goals.
-5. **Implement Goal Progress Retrieval:** Retrieve progress data for a specific goal.
-6. **Test and Refine:** Thoroughly test all endpoints and handle potential errors.
+- **Users**: `id`, `clerk_id`, `is_active`, `created_at`, `updated_at`
+- **Transactions**: `id`, `user_id`, `category_id`, `name`, `amount`, `description`, `type`, `date`, `created_at`, `updated_at`
+- **Categories**: `id`, `name`, `description`
+- **Budgets**: `id`, `category_id`, `amount`, `start_date`, `end_date`
+- **Assets**: `id`, `user_id`, `name`, `amount`
+- **Liabilities**: `id`, `user_id`, `name`, `amount`
+- **Goals**: `id`, `user_id`, `type`, `amount`, `start_date`, `end_date`, `status`
 
-## Reporting & Analytics
+---
 
-### TODO
+## API Endpoints
 
-- Implement `GET /reports/income_vs_expenses` endpoint to generate income vs expense report.
-- Implement `GET /reports/category_spending` endpoint to generate category spending report.
-- Implement `GET /reports/net_worth` endpoint to generate net worth trend report.
-- Implement `GET /reports/goal_progress` endpoint to generate goal progress report.
+### User Management
 
-### Roadmap
+| Method | Endpoint         | Description             |
+|--------|------------------|-------------------------|
+| GET    | `/users`         | List all users          |
+| GET    | `/users/:id`     | Get a specific user     |
+| POST   | `/users`         | Create a new user       |
+| PUT    | `/users/:id`     | Update a user           |
+| DELETE | `/users/:id`     | Delete a user           |
 
-1. **Data Aggregation:** Develop functions to calculate totals, averages, and other relevant metrics.
-2. **Report Structure:** Define report formats (JSON, CSV) and include necessary data fields.
-3. **Income vs Expenses Report:** Implement calculations for income and expenses, and generate the report.
-4. **Category Spending Report:** Calculate spending per category and generate the report.
-5. **Net Worth Report:** Calculate net worth based on assets and liabilities, and generate the report.
-6. **Goal Progress Report:** Retrieve goal progress data and calculate progress percentage.
-7. **Data Filtering:** Allow users to filter reports by date range or other criteria.
-8. **Testing and Refinement:** Test report generation and accuracy, and optimize performance.
+### Transaction Management
 
-**Additional Notes:**
+| Method | Endpoint             | Description                 |
+|--------|----------------------|-----------------------------|
+| GET    | `/transactions`      | List all transactions       |
+| GET    | `/transactions/:id`  | Get a specific transaction  |
+| POST   | `/transactions`      | Create a new transaction    |
+| PUT    | `/transactions/:id`  | Update a transaction        |
+| DELETE | `/transactions/:id`  | Delete a transaction        |
 
-- All endpoints support filtering and pagination (to be implemented).
-- Authentication and authorization mechanisms are not included in this documentation (to be implemented).
+### Category Management
 
-## Project Resources
+| Method | Endpoint           | Description               |
+|--------|--------------------|---------------------------|
+| GET    | `/categories`      | List all categories       |
+| GET    | `/categories/:id`  | Get a specific category   |
+| POST   | `/categories`      | Create a new category     |
+| PUT    | `/categories/:id`  | Update a category         |
+| DELETE | `/categories/:id`  | Delete a category         |
 
-- **Excalidraw:** Link to Excalidraw project for visualizing app flow (if applicable).
-- **FinanceTracker (Optional):** Link to the deployed finance tracker application (if available).
+### Asset Management
 
-## Development Status
+| Method | Endpoint         | Description             |
+|--------|------------------|-------------------------|
+| GET    | `/assets`        | List all assets         |
+| GET    | `/assets/:id`    | Get a specific asset    |
+| POST   | `/assets`        | Create a new asset      |
+| PUT    | `/assets/:id`    | Update an asset         |
+| DELETE | `/assets/:id`    | Delete an asset         |
 
-This project is actively under development. Check the "TODO" section for
+### Liability Management
+
+| Method | Endpoint            | Description                |
+|--------|---------------------|----------------------------|
+| GET    | `/liabilities`      | List all liabilities       |
+| GET    | `/liabilities/:id`  | Get a specific liability   |
+| POST   | `/liabilities`      | Create a new liability     |
+| PUT    | `/liabilities/:id`  | Update a liability         |
+| DELETE | `/liabilities/:id`  | Delete a liability         |
+
+### Budget Management
+
+| Method | Endpoint         | Description             |
+|--------|------------------|-------------------------|
+| GET    | `/budgets`       | List all budgets        |
+| GET    | `/budgets/:id`   | Get a specific budget   |
+| POST   | `/budgets`       | Create a new budget     |
+| PUT    | `/budgets/:id`   | Update a budget         |
+| DELETE | `/budgets/:id`   | Delete a budget         |
+
+### Goal Management
+
+| Method | Endpoint            | Description                |
+|--------|---------------------|----------------------------|
+| GET    | `/goals`            | List all goals             |
+| GET    | `/goals/:id`        | Get a specific goal        |
+| POST   | `/goals`            | Create a new goal          |
+| PUT    | `/goals/:id`        | Update a goal              |
+| DELETE | `/goals/:id`        | Delete a goal              |
+| GET    | `/goals/users/:id`  | List goals by user ID      |
+
+---
+
+## Setup and Installation
+
+### Prerequisites
+
+- Go 1.22.4 or higher
+- Turso (LibSQL) database access
+- Git for version control
+- Optional: SQLC for query generation
+
+### Installation Steps
+
+1. **Clone the Repository**
+   ```bash
+   git clone <repository-url>
+   cd finance-tracker-api
+   ```
+
+2. **Set Up Environment Variables**
+   Copy `.env.example` to `.env` and update `DB_URL` with your Turso database connection string:
+   ```bash
+   cp .env.example .env
+   ```
+
+3. **Install Dependencies**
+   ```bash
+   go mod tidy
+   ```
+
+4. **Run the Application**
+   ```bash
+   go run main.go
+   ```
+
+5. **Verify**
+   Access `http://localhost:8080/` to see the "Server active" message.
+
+---
+
+## Usage Examples
+
+### Creating a User
+
+**Request**
+```bash
+curl -X POST http://localhost:8080/users \
+-H "Content-Type: application/json" \
+-d '{"clerk_id": "user_123", "is_active": true}'
+```
+
+**Response**
+```json
+{
+  "id": 1,
+  "clerk_id": "user_123",
+  "is_active": true,
+  "created_at": "2025-03-17T10:00:00Z",
+  "updated_at": "2025-03-17T10:00:00Z"
+}
+```
+
+### Tracking a Transaction
+
+**Request**
+```bash
+curl -X POST http://localhost:8080/transactions \
+-H "Content-Type: application/json" \
+-d '{"user_id": 1, "category_id": 1, "name": "Grocery Shopping", "amount": 50.75, "type": "expense", "date": "2025-03-17T12:00:00Z"}'
+```
+
+**Response**
+```json
+{
+  "id": 1,
+  "user_id": 1,
+  "category_id": 1,
+  "name": "Grocery Shopping",
+  "amount": 50.75,
+  "type": "expense",
+  "date": "2025-03-17T12:00:00Z",
+  "created_at": "2025-03-17T12:00:00Z",
+  "updated_at": "2025-03-17T12:00:00Z"
+}
+```
+
+---
+
+## Contributing
+
+### How to Get Involved
+
+Developers are welcome to contribute! Fork the repository, create a feature branch, and submit a pull request. Focus areas include:
+- Adding reporting endpoints
+- Implementing authentication
+- Enhancing test coverage
+
+### Code Standards
+
+- Follow Go conventions (e.g., `gofmt`, `golint`).
+- Use SQLC for database queries.
+- Write clear, concise commit messages.
+
+---
+
+## For Clients
+
+### Business Value
+
+- **User Empowerment**: Equip your customers with tools to manage their finances seamlessly.
+- **Scalability**: Built to handle growing user bases with minimal overhead.
+- **Customizable**: Easily adapt the API to fit specific branding or feature needs.
+
+### Customization Options
+
+- Add branded reporting dashboards.
+- Integrate with existing authentication systems.
+- Extend data models for additional financial metrics.
+
+---
+
+## Contact and Collaboration
+
+Interested in hiring a skilled developer, contributing to the project, or deploying this API for your business? Reach out via the project's repository or contacts. Let’s build something extraordinary together!

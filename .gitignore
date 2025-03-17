@@ -33,3 +33,5 @@ fly-deploy.yml
 docker-compose.yml
 
 .idea
+
+repomix-output.txt
