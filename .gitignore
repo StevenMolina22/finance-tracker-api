@@ -24,3 +24,14 @@ go.work.sum
 # env file
 .env
 tmp
+
+# Flyio deploy
+Dockerfile
+fly.toml
+.dockerignore
+fly-deploy.yml
+docker-compose.yml
+
+.idea
+
+repomix-output.txt

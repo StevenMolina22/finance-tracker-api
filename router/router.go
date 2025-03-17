@@ -20,7 +20,7 @@ func PublicRoutes(db *sql.DB, app *fiber.App) {
 	users.Put("/:id", ctlr.UpdateUser)
 	users.Delete("/:id", ctlr.DeleteUser)
 
-	// Transactions TODO: Add type to transactions (income, expense)
+	// Transactions
 	transactions := app.Group("/transactions")
 	transactions.Get("/", ctlr.GetTransactions)
 	transactions.Post("/", ctlr.CreateTransaction)
@@ -59,4 +59,14 @@ func PublicRoutes(db *sql.DB, app *fiber.App) {
 	budgets.Get("/:id", ctlr.GetBudget)
 	budgets.Put("/:id", ctlr.UpdateBudget)
 	budgets.Delete("/:id", ctlr.DeleteBudget)
+
+	// Goals
+	goals := app.Group("/goals")
+	goals.Get("/", ctlr.ListGoals)
+	goals.Post("/", ctlr.CreateGoal)
+	goals.Get("/:id", ctlr.GetGoal)
+	goals.Put("/:id", ctlr.UpdateGoal)
+	goals.Delete("/:id", ctlr.DeleteGoal)
+
+	goals.Get("/users/:id", ctlr.ListGoalsByUserID)
 }

@@ -12,13 +12,13 @@ type Controller struct {
 	queries *sqlc.Queries
 }
 
+
 // Constructor like func
 func NewController(db *sql.DB) *Controller {
 	return &Controller{
 		queries: sqlc.New(db),
 	}
 }
-
 func (ctlr *Controller) GetRoot(c *fiber.Ctx) error {
 	return c.SendString("Server active")
 }
